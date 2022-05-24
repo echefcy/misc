@@ -42,6 +42,7 @@ fn print_fib() {
 //             Some((_, true)) => false,
 //             Some((_, false)) => {
 //                 hm.insert(mat, true);
+//                 println!("{} {}\n{} {}\n", mat.0, mat.1, mat.2, mat.3);
 //                 true
 //             }
 //             None => {
@@ -89,45 +90,65 @@ fn print_fib() {
 //     counter
 // }
 
+// --------------------------------------------------------------------------------
 const N: usize = 50;
 const SQRTN: usize = 8;
 
-// determines b1, c1
-fn increase_counter(sqnums: &[usize], a: usize, d: usize) -> bool {
-    let mut s = 1;
-    while sqnums[s] < a && s < sqnums.len() {
-        let b1c1 = a - sqnums[s];
-        s += 1;
+fn square_pair(sqnums: &[usize], a: usize, d: usize) -> (usize, usize) {
+    // finds (s, s') such that sqnums[s] - sqnums[s'] = a - d
+    // precondition: a != d
+    let sqdiff = a - d;
+    for s in 1..sqnums.len() {
+        for s_ in 1..sqnums.len() {
+            if sqdiff == sqnums[s] - sqnums[s_] {
+                return (s, s_);
+            }
+        }
     }
-    true
+    (0, 0)
+    // TODO: optimize this function
+}
+
+// determines b1, c1
+fn increment_counter(sqnums: &[usize], a: usize, d: usize) -> usize {
+    let mut counter = 0; // counts how many matrices, given a, d, satisfies the problem conditions
+
+    //  a - b1*c1 = a1^2, d - b1*c1 = d1^2 ==> a - d = sqnums[s] - sqnums[s'] for some s, s'
+    let (s, s_) = square_pair(sqnums, a, d);
+
+    42
 }
 
 fn e420() -> usize {
-    let mut counter = 0;
+    // Definition of matrix multiplication yields the conditions
+    // a - b1*c1 = a1^2, d - b1*c1 = d1^2.
+    // This implies a - b1*c1 and d  b1*c1 must be square
+    // numbers and a1 = sqrt(a-b1*c1) and d1 = sqrt(d - b1*c1).
+    // This in turn determines the multiplicand matrix and therefore
+    // the product matrix. So a, d, b1, c1 determines the entire equation.
+
+    let mut counter = 0; // counts how many matrices satisfy the problem condition
+
+    // sqnums is such that sqnums[s] = s^2
     let mut sqnums: [usize; SQRTN] = [0; SQRTN];
     let &mut sqref = &mut sqnums;
-    // initialize sqnums
     for (i, &_) in sqref.iter().enumerate() {
         sqnums[i] = i * i;
     }
+
+    // fixes a, d
     for a in 1..N {
         for d in 1..N - a {
-            if increase_counter(&sqnums, a, d) {
-                counter += 1;
-            }
+            counter += increment_counter(&sqnums, a, d);
         }
     }
     counter
 }
 
 fn main() {
-    // let mut n = 1000;
-    // while n < 100_000{
-    //     println!("n: {}, result: {}", n, e420(n));
-    //     n += 1000;
-    // }
-
     // println!("{}", e420(10_000_000));
     // println!("{}", e420(100_000));
+    // println!("{}", e420(1000));
+
     println!("{}", e420());
 }
