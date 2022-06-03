@@ -54,12 +54,12 @@ fn print_fib() {
 // }
 
 // fn debug_increase_counter(
-//     n: usize,
-//     hm: &mut HashMap<(usize, usize, usize, usize), (bool, usize, usize, usize, usize)>,
-//     a1: usize,
-//     b1: usize,
-//     c1: usize,
-//     d1: usize,
+//     n: isize,
+//     hm: &mut HashMap<(isize, isize, isize, isize), (bool, isize, isize, isize, isize)>,
+//     a1: isize,
+//     b1: isize,
+//     c1: isize,
+//     d1: isize,
 // ) -> bool {
 //     let a = a1 * a1 + b1 * c1;
 //     let b = a1 * b1 + b1 * d1;
@@ -89,17 +89,17 @@ fn print_fib() {
 //     }
 // }
 
-// fn e420(n: usize) -> usize {
+// fn e420(n: isize) -> isize {
 //     let mut counter = 0;
-//     let mut hm: HashMap<(usize, usize, usize, usize), bool> = HashMap::new();
-//     let mut debug_hm: HashMap<(usize, usize, usize, usize), (bool, usize, usize, usize, usize)> =
+//     let mut hm: HashMap<(isize, isize, isize, isize), bool> = HashMap::new();
+//     let mut debug_hm: HashMap<(isize, isize, isize, isize), (bool, isize, isize, isize, isize)> =
 //         HashMap::new();
 
 //     let mut a1 = 1;
 //     let mut b1 = 1;
 //     let mut c1 = 1;
 //     let mut d1 = 1;
-//     let sqrtn = f64::sqrt(n as f64) as usize;
+//     let sqrtn = f64::sqrt(n as f64) as isize;
 //     let halfn = n / 2;
 
 //     while a1 <= sqrtn {
@@ -130,9 +130,9 @@ fn print_fib() {
 // --------------------------------------------------------------------------------
 use std::collections::HashMap;
 
-fn factors(b1c1: usize) -> Vec<usize> {
+fn factors(b1c1: isize) -> Vec<isize> {
     // factors of b1c1 stored in an array
-    let sqrtb1c1 = f64::sqrt(b1c1 as f64) as usize;
+    let sqrtb1c1 = f64::sqrt(b1c1 as f64) as isize;
     let mut ret = Vec::new();
     // TODO: optimize this
     for i in 1..sqrtb1c1{
@@ -143,15 +143,15 @@ fn factors(b1c1: usize) -> Vec<usize> {
     ret
 }
 
-fn count_a_d_not_equal(s: usize, sqnums: &[usize], a: usize, d: usize) -> usize{
+fn count_a_d_not_equal(s: usize, sqnums: &[isize], a: isize, d: isize) -> isize{
     let mut counter = 0;
     let b1c1 = a - sqnums[s];
-    let a1 = f64::sqrt((a - b1c1) as f64) as usize;
-    let d1 = f64::sqrt((d - b1c1) as f64) as usize;
+    let a1 = f64::sqrt((a - b1c1) as f64) as isize;
+    let d1 = f64::sqrt((d - b1c1) as f64) as isize;
     assert_eq!(a1*a1 + b1c1, a);
     assert_eq!(b1c1 + d1*d1, d);
     let fs = factors(b1c1);
-    let mut memo : HashMap<(usize, usize), bool> = HashMap::new();
+    let mut memo : HashMap<(isize, isize), bool> = HashMap::new();
     // TODO: optimize choosing b1, c1 and calculating b, c
     for factor in fs{
         let b1 = factor;
@@ -168,11 +168,11 @@ fn count_a_d_not_equal(s: usize, sqnums: &[usize], a: usize, d: usize) -> usize{
     counter
 }
 
-// fn square_sum_pair(sqnums: &[usize], target: usize) -> (usize, usize){
+// fn square_sum_pair(sqnums: &[isize], target: isize) -> (isize, isize){
 //     // finds (s, s') such that sqnums[s] + sqnums[s'] = target
 // }
 
-fn count_a_d_equal(sqnums: &[usize], a: usize) -> usize {
+fn count_a_d_equal(sqnums: &[isize], a: isize) -> isize {
     // basically counts the number of distinct pairs of square numbers (order doesn't matter, but the numbers are distinct)
     // that add up to a, and then multiply that number by 2 to account for b1 and c1 being exchangeable
     let mut counter = 0;
@@ -192,36 +192,36 @@ fn count_a_d_equal(sqnums: &[usize], a: usize) -> usize {
     counter
 }
 
-fn square_diff_pair(sqnums: &[usize], a: usize, d: usize) -> (usize, usize) {
-    // finds (s, s') such that sqnums[s] - sqnums[s'] = a - d
+fn square_diff_pair(sqnums: &[isize], a: isize, d: isize) -> isize {
+    // finds (s, s') such that sqnums[s] - sqnums[s'] = a - d, then returns s
     let sqdiff = a - d;
     for s in 1..sqnums.len() {
         for s_ in 1..sqnums.len() {
             if sqdiff == sqnums[s] - sqnums[s_] {
-                return (s, s_);
+                return s as isize;
             }
         }
     }
-    (0, 0)
+    0
     // TODO: optimize this function
 }
 
 // determines b1, c1
-fn count_a_d(sqnums: &[usize], a: usize, d: usize) -> usize {
+fn count_a_d(sqnums: &[isize], a: isize, d: isize) -> isize {
     let mut counter = 0; // counts how many matrices, given a, d, satisfies the problem conditions
 
     // a - b1*c1 = a1^2, d - b1*c1 = d1^2 ==> a - d = sqnums[s] - sqnums[s'] for some s, s'
-    let (s, _) = square_diff_pair(sqnums, a, d);
+    let s = square_diff_pair(sqnums, a, d);
     if a == d {
         counter += count_a_d_equal(sqnums, a)
     }else{
-        counter += count_a_d_not_equal(s, sqnums, a, d)
+        counter += count_a_d_not_equal(s as usize, sqnums, a, d)
     }
 
     counter
 }
 
-fn e420(n : usize) -> usize {
+fn e420(n : isize) -> isize {
     // Definition of matrix multiplication yields the conditions
     // a - b1*c1 = a1^2, d - b1*c1 = d1^2.
     // This implies a - b1*c1 and d  b1*c1 must be square
@@ -235,7 +235,7 @@ fn e420(n : usize) -> usize {
     let sqrtn = f64::sqrt(n as f64) as usize;
     let mut sqnums = Vec::with_capacity(sqrtn);
     for i in 0..sqnums.len(){
-        sqnums[i] = i*i;
+        sqnums[i] = (i*i) as isize;
     }
 
     // fixes a, d
