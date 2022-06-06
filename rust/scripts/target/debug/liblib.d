@@ -1,0 +1,1 @@
+/home/jason/workspace/misc/rust/scripts/target/debug/liblib.rlib: /home/jason/workspace/misc/rust/scripts/src/lib/e420/primit.rs /home/jason/workspace/misc/rust/scripts/src/lib/e420/solution.rs /home/jason/workspace/misc/rust/scripts/src/lib/e420.rs /home/jason/workspace/misc/rust/scripts/src/lib/fib.rs /home/jason/workspace/misc/rust/scripts/src/lib/lib.rs
